@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "myApp",
-    "slug": "myApp",
+    "name": "Youwe's APP",
+    "slug": "YOUWE",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/YOUWe_Icon_greenBG-whiteTXT.png",
+    "scheme": "YouweApp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

@@ -1,98 +1,121 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet, Pressable, View, Text } from 'react-native';
+import { router } from 'expo-router';
+import { useTheme } from '@/contexts/ThemeContext';
+import { LinearGradient } from 'expo-linear-gradient';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function LandingScreen() {
+  const { colors, isDark } = useTheme();
 
-export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Background Gradient Overlay */}
+      <LinearGradient
+        colors={
+          isDark
+            ? ['rgba(0, 229, 255, 0.1)', 'transparent', 'rgba(124, 77, 255, 0.1)']
+            : ['rgba(26, 115, 232, 0.1)', 'transparent', 'rgba(255, 112, 67, 0.1)']
+        }
+        style={styles.gradientOverlay}
+      />
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      {/* Content */}
+      <View style={styles.contentContainer}>
+        {/* App Name */}
+        <Text
+          style={[
+            styles.appName,
+            { color: colors.text },
+          ]}>
+          YouWe
+        </Text>
+
+        {/* Tagline */}
+        <Text
+          style={[
+            styles.tagline,
+            { color: isDark ? colors.primary : colors.secondary },
+          ]}>
+          Host. Join. Dominate.
+        </Text>
+
+        {/* CTA Button */}
+        <Pressable
+          style={({ pressed }) => [
+            styles.ctaButton,
+            {
+              backgroundColor: colors.primary,
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+          onPress={() => router.replace('/(drawer)/slots')}>
+          <Text style={styles.ctaButtonText}>Enter App</Text>
+        </Pressable>
+
+        {/* Subtitle */}
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+          BGMI Tournament Platform
+        </Text>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  gradientOverlay: {
     position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  appName: {
+    fontSize: 64,
+    fontWeight: '900',
+    letterSpacing: 2,
+    marginBottom: 16,
+  },
+  tagline: {
+    fontSize: 24,
+    fontWeight: '600',
+    letterSpacing: 1,
+    marginBottom: 60,
+    textAlign: 'center',
+  },
+  ctaButton: {
+    paddingVertical: 20,
+    paddingHorizontal: 60,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+    minWidth: 250,
+    alignItems: 'center',
+  },
+  ctaButtonText: {
+    color: '#000000',
+    fontSize: 22,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+  subtitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginTop: 40,
+    textTransform: 'uppercase',
+    letterSpacing: 2,
   },
 });
