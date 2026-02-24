@@ -58,7 +58,7 @@ function CustomDrawerContent(props: any) {
 }
 
 export default function DrawerLayout() {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <Drawer
@@ -92,6 +92,16 @@ export default function DrawerLayout() {
           drawerLabel: 'Matches',
           drawerIcon: ({ color, size }) => (
             <IconSymbol name="gamecontroller.fill" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="tournaments"
+        options={{
+          title: 'Tournaments',
+          drawerLabel: 'Tournaments',
+          drawerIcon: ({ color, size }) => (
+            <IconSymbol name="trophy.fill" size={size} color={color} />
           ),
         }}
       />
