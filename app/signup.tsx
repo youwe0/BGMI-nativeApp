@@ -15,18 +15,20 @@ import { router } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function LoginScreen() {
+export default function SignUpScreen() {
   const { colors, isDark } = useTheme();
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <LinearGradient
         colors={
           isDark
-            ? ['rgba(0,229,255,0.1)', 'transparent', 'rgba(124,77,255,0.12)']
-            : ['rgba(26,115,232,0.1)', 'transparent', 'rgba(255,112,67,0.12)']
+            ? ['rgba(124,77,255,0.12)', 'transparent', 'rgba(0,229,255,0.1)']
+            : ['rgba(255,112,67,0.12)', 'transparent', 'rgba(26,115,232,0.1)']
         }
         style={StyleSheet.absoluteFill}
       />
@@ -40,23 +42,49 @@ export default function LoginScreen() {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled">
 
+            {/* ── Back button ── */}
+            <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+              <Text style={[styles.backText, { color: colors.primary }]}>← Back</Text>
+            </TouchableOpacity>
+
             {/* ── Branding ── */}
             <View style={styles.brand}>
-              <View style={[styles.logoCircle, { backgroundColor: colors.primary }]}>
+              <View style={[styles.logoCircle, { backgroundColor: colors.secondary }]}>
                 <Text style={styles.logoText}>YW</Text>
               </View>
               <Text style={[styles.appName, { color: colors.text }]}>YouWe</Text>
-              <Text style={[styles.tagline, { color: isDark ? colors.primary : colors.secondary }]}>
-                Host. Join. Dominate.
+              <Text style={[styles.tagline, { color: colors.secondary }]}>
+                Join the Arena
               </Text>
             </View>
 
-            {/* ── Login Card ── */}
+            {/* ── Sign Up Card ── */}
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.cardTitle, { color: colors.text }]}>Welcome Back</Text>
+              <Text style={[styles.cardTitle, { color: colors.text }]}>Create Account</Text>
               <Text style={[styles.cardSub, { color: colors.textSecondary }]}>
-                Login to your YouWe account
+                Start your tournament journey today
               </Text>
+
+              <View style={styles.field}>
+                <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>
+                  Username
+                </Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    {
+                      backgroundColor: colors.background,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    },
+                  ]}
+                  value={username}
+                  onChangeText={setUsername}
+                  placeholder="e.g. ProGamer99"
+                  placeholderTextColor={colors.textSecondary}
+                  autoCapitalize="none"
+                />
+              </View>
 
               <View style={styles.field}>
                 <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Email</Text>
@@ -91,35 +119,51 @@ export default function LoginScreen() {
                   ]}
                   value={password}
                   onChangeText={setPassword}
-                  placeholder="Enter your password"
+                  placeholder="Create a strong password"
                   placeholderTextColor={colors.textSecondary}
                   secureTextEntry
                 />
               </View>
 
-              <TouchableOpacity style={styles.forgotRow}>
-                <Text style={[styles.forgotText, { color: colors.primary }]}>
-                  Forgot Password?
+              <View style={styles.field}>
+                <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>
+                  Confirm Password
                 </Text>
-              </TouchableOpacity>
+                <TextInput
+                  style={[
+                    styles.input,
+                    {
+                      backgroundColor: colors.background,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    },
+                  ]}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  placeholder="Re-enter your password"
+                  placeholderTextColor={colors.textSecondary}
+                  secureTextEntry
+                />
+              </View>
 
+              {/* Create Account — goes to Login */}
               <Pressable
                 style={({ pressed }) => [
-                  styles.loginBtn,
-                  { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 },
+                  styles.signupBtn,
+                  { backgroundColor: colors.secondary, opacity: pressed ? 0.85 : 1 },
                 ]}
-                onPress={() => router.replace('/(drawer)/home')}>
-                <Text style={styles.loginBtnText}>Login</Text>
+                onPress={() => router.replace('/')}>
+                <Text style={styles.signupBtnText}>Create Account</Text>
               </Pressable>
             </View>
 
-            {/* ── Sign Up Link ── */}
+            {/* ── Login Link ── */}
             <View style={styles.bottomRow}>
               <Text style={[styles.bottomText, { color: colors.textSecondary }]}>
-                Don't have an account?{'  '}
+                Already have an account?{'  '}
               </Text>
-              <TouchableOpacity onPress={() => router.push('/signup')}>
-                <Text style={[styles.bottomLink, { color: colors.primary }]}>Sign Up</Text>
+              <TouchableOpacity onPress={() => router.replace('/')}>
+                <Text style={[styles.bottomLink, { color: colors.primary }]}>Login</Text>
               </TouchableOpacity>
             </View>
 
@@ -132,23 +176,26 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scroll: { paddingHorizontal: 24, paddingTop: 48, paddingBottom: 32 },
+  scroll: { paddingHorizontal: 24, paddingTop: 24, paddingBottom: 32 },
 
-  brand: { alignItems: 'center', marginBottom: 40 },
+  backBtn: { marginBottom: 12 },
+  backText: { fontSize: 15, fontWeight: '600' },
+
+  brand: { alignItems: 'center', marginBottom: 32 },
   logoCircle: {
-    width: 74,
-    height: 74,
-    borderRadius: 37,
+    width: 68,
+    height: 68,
+    borderRadius: 34,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
-    shadowColor: '#00E5FF',
+    marginBottom: 14,
+    shadowColor: '#7C4DFF',
     shadowOpacity: 0.4,
     shadowRadius: 14,
     elevation: 7,
   },
-  logoText: { fontSize: 30, fontWeight: '900', color: '#0B0F14' },
-  appName: { fontSize: 48, fontWeight: '900', letterSpacing: 2, marginBottom: 6 },
+  logoText: { fontSize: 28, fontWeight: '900', color: '#fff' },
+  appName: { fontSize: 42, fontWeight: '900', letterSpacing: 2, marginBottom: 6 },
   tagline: { fontSize: 15, fontWeight: '600', letterSpacing: 0.5 },
 
   card: {
@@ -170,20 +217,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
-  forgotRow: { alignItems: 'flex-end', marginBottom: 22, marginTop: -4 },
-  forgotText: { fontSize: 13, fontWeight: '600' },
-
-  loginBtn: {
+  signupBtn: {
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
+    marginTop: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 4,
   },
-  loginBtnText: { color: '#0B0F14', fontSize: 16, fontWeight: '800' },
+  signupBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
 
   bottomRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
   bottomText: { fontSize: 14 },

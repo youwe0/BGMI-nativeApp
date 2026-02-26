@@ -1,5 +1,5 @@
 import { Drawer } from 'expo-router/drawer';
-import { Pressable, View, Text, StyleSheet } from 'react-native';
+import { Pressable, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { router } from 'expo-router';
@@ -13,8 +13,12 @@ function CustomDrawerContent(props: any) {
       {...props}
       style={{ backgroundColor: colors.background }}
       contentContainerStyle={styles.drawerContent}>
-      {/* Header */}
-      <View style={[styles.drawerHeader, { borderBottomColor: colors.border }]}>
+
+      {/* Header — tap to open profile */}
+      <TouchableOpacity
+        style={[styles.drawerHeader, { borderBottomColor: colors.border }]}
+        onPress={() => props.navigation.navigate('profile')}
+        activeOpacity={0.75}>
         <View style={[styles.appIcon, { backgroundColor: colors.primary }]}>
           <Text style={styles.appIconText}>YW</Text>
         </View>
@@ -22,9 +26,20 @@ function CustomDrawerContent(props: any) {
         <Text style={[styles.appSubtitle, { color: colors.textSecondary }]}>
           Tournament Platform
         </Text>
-      </View>
+        <View
+          style={[
+            styles.profilePill,
+            {
+              backgroundColor: colors.primary + '18',
+              borderColor: colors.primary + '40',
+            },
+          ]}>
+          <IconSymbol name="person.circle.fill" size={13} color={colors.primary} />
+          <Text style={[styles.profilePillText, { color: colors.primary }]}>View Profile</Text>
+        </View>
+      </TouchableOpacity>
 
-      {/* Drawer Items */}
+      {/* Drawer items (Home, Tournaments visible) */}
       <View style={styles.drawerItems}>
         <DrawerItemList {...props} />
       </View>
@@ -38,20 +53,17 @@ function CustomDrawerContent(props: any) {
           size={20}
           color={colors.text}
         />
-        <Text style={[styles.themeToggleText, { color: colors.text }]}>
+        <Text style={[styles.actionText, { color: colors.text }]}>
           {isDark ? 'Light Mode' : 'Dark Mode'}
         </Text>
       </Pressable>
 
-      {/* Logout Button */}
+      {/* Logout */}
       <Pressable
         style={[styles.logoutButton, { backgroundColor: colors.error + '20' }]}
-        onPress={() => {
-          // In real app, this would handle logout
-          router.replace('/');
-        }}>
+        onPress={() => router.replace('/')}>
         <IconSymbol name="arrow.right.square" size={20} color={colors.error} />
-        <Text style={[styles.logoutText, { color: colors.error }]}>Logout</Text>
+        <Text style={[styles.actionText, { color: colors.error }]}>Logout</Text>
       </Pressable>
     </DrawerContentScrollView>
   );
@@ -62,39 +74,41 @@ export default function DrawerLayout() {
 
   return (
     <Drawer
+      initialRouteName="home"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.background,
-        },
+      screenOptions={({ navigation }) => ({
+        headerStyle: { backgroundColor: colors.background },
         headerTintColor: colors.text,
-        headerTitleStyle: {
-          fontWeight: '700',
-        },
-        drawerStyle: {
-          backgroundColor: colors.background,
-        },
+        headerTitleStyle: { fontWeight: '700' },
+        drawerStyle: { backgroundColor: colors.background },
         drawerActiveTintColor: colors.primary,
         drawerInactiveTintColor: colors.textSecondary,
         drawerActiveBackgroundColor: colors.primary + '20',
-        drawerItemStyle: {
-          borderRadius: 12,
-        },
-        drawerLabelStyle: {
-          fontSize: 16,
-          fontWeight: '600',
-        },
-      }}>
+        drawerItemStyle: { borderRadius: 12 },
+        drawerLabelStyle: { fontSize: 16, fontWeight: '600' },
+        // Profile icon in every screen's top-right header
+        headerRight: () => (
+          <Pressable
+            onPress={() => navigation.navigate('profile')}
+            style={styles.headerProfileBtn}>
+            <IconSymbol name="person.circle.fill" size={28} color={colors.primary} />
+          </Pressable>
+        ),
+      })}>
+
+      {/* Home — shown in sidebar */}
       <Drawer.Screen
-        name="slots"
+        name="home"
         options={{
-          title: 'Matches',
-          drawerLabel: 'Matches',
+          title: 'Home',
+          drawerLabel: 'Home',
           drawerIcon: ({ color, size }) => (
-            <IconSymbol name="gamecontroller.fill" size={size} color={color} />
+            <IconSymbol name="house.fill" size={size} color={color} />
           ),
         }}
       />
+
+      {/* Tournaments — shown in sidebar */}
       <Drawer.Screen
         name="tournaments"
         options={{
@@ -105,14 +119,22 @@ export default function DrawerLayout() {
           ),
         }}
       />
+
+      {/* Slots — hidden from sidebar */}
+      <Drawer.Screen
+        name="slots"
+        options={{
+          title: 'Matches',
+          drawerItemStyle: { display: 'none' },
+        }}
+      />
+
+      {/* Profile — hidden from sidebar, opened via header icon or drawer header */}
       <Drawer.Screen
         name="profile"
         options={{
           title: 'Profile',
-          drawerLabel: 'Profile',
-          drawerIcon: ({ color, size }) => (
-            <IconSymbol name="person.fill" size={size} color={color} />
-          ),
+          drawerItemStyle: { display: 'none' },
         }}
       />
     </Drawer>
@@ -120,45 +142,45 @@ export default function DrawerLayout() {
 }
 
 const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
-    paddingTop: 20,
-  },
+  drawerContent: { flex: 1, paddingTop: 20 },
+
   drawerHeader: {
     paddingHorizontal: 20,
     paddingBottom: 20,
-    marginBottom: 20,
+    marginBottom: 16,
     borderBottomWidth: 1,
     alignItems: 'center',
   },
   appIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
   },
-  appIconText: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#000',
-  },
-  appTitle: {
-    fontSize: 24,
-    fontWeight: '800',
-    marginBottom: 4,
-  },
+  appIconText: { fontSize: 26, fontWeight: '800', color: '#000' },
+  appTitle: { fontSize: 24, fontWeight: '800', marginBottom: 4 },
   appSubtitle: {
     fontSize: 12,
     fontWeight: '500',
     textTransform: 'uppercase',
     letterSpacing: 1,
+    marginBottom: 12,
   },
-  drawerItems: {
-    flex: 1,
+  profilePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
     paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 20,
+    borderWidth: 1,
   },
+  profilePillText: { fontSize: 11, fontWeight: '700' },
+
+  drawerItems: { flex: 1, paddingHorizontal: 12 },
+
   themeToggle: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -167,10 +189,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 16,
     borderRadius: 12,
-  },
-  themeToggleText: {
-    fontSize: 16,
-    fontWeight: '600',
   },
   logoutButton: {
     flexDirection: 'row',
@@ -181,8 +199,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
   },
-  logoutText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  actionText: { fontSize: 16, fontWeight: '600' },
+
+  headerProfileBtn: { marginRight: 16, padding: 4 },
 });
