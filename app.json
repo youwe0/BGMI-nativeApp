@@ -4,7 +4,7 @@
     "slug": "YOUWE",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/YOUWe_Icon_greenBG-whiteTXT.png",
+    "icon": "./assets/images/AppLOGO.png",
     "scheme": "YouweApp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
