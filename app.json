@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Youwe's APP",
-    "slug": "YOUWE",
+    "name": "TooToo",
+    "slug": "TooToo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/AppLOGO.png",
-    "scheme": "YouweApp",
+    "scheme": "TooTooApp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
