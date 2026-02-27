@@ -20,9 +20,9 @@ function CustomDrawerContent(props: any) {
         onPress={() => props.navigation.navigate('profile')}
         activeOpacity={0.75}>
         <View style={[styles.appIcon, { backgroundColor: colors.primary }]}>
-          <Text style={styles.appIconText}>YW</Text>
+          <Text style={styles.appIconText}>TT</Text>
         </View>
-        <Text style={[styles.appTitle, { color: colors.text }]}>YouWe</Text>
+        <Text style={[styles.appTitle, { color: colors.text }]}>Too Too</Text>
         <Text style={[styles.appSubtitle, { color: colors.textSecondary }]}>
           Tournament Platform
         </Text>
@@ -108,6 +108,18 @@ export default function DrawerLayout() {
         }}
       />
 
+      {/* Challenge Arena — shown in sidebar */}
+      <Drawer.Screen
+        name="challenge-arena"
+        options={{
+          title: 'Challenge Arena',
+          drawerLabel: 'Challenge Arena',
+          drawerIcon: ({ color, size }) => (
+            <IconSymbol name="flame.fill" size={size} color={color} />
+          ),
+        }}
+      />
+
       {/* Tournaments — shown in sidebar */}
       <Drawer.Screen
         name="tournaments"
@@ -116,6 +128,42 @@ export default function DrawerLayout() {
           drawerLabel: 'Tournaments',
           drawerIcon: ({ color, size }) => (
             <IconSymbol name="trophy.fill" size={size} color={color} />
+          ),
+        }}
+      />
+
+      {/* Leaderboard — shown in sidebar */}
+      <Drawer.Screen
+        name="leaderboard"
+        options={{
+          title: 'Leaderboard',
+          drawerLabel: 'Leaderboard',
+          drawerIcon: ({ color, size }) => (
+            <IconSymbol name="chart.bar.fill" size={size} color={color} />
+          ),
+        }}
+      />
+
+      {/* Wallet — shown in sidebar */}
+      <Drawer.Screen
+        name="wallet"
+        options={{
+          title: 'Wallet',
+          drawerLabel: 'Wallet',
+          drawerIcon: ({ color, size }) => (
+            <IconSymbol name="wallet.pass.fill" size={size} color={color} />
+          ),
+        }}
+      />
+
+      {/* Notifications — shown in sidebar */}
+      <Drawer.Screen
+        name="notifications"
+        options={{
+          title: 'Notifications',
+          drawerLabel: 'Notifications',
+          drawerIcon: ({ color, size }) => (
+            <IconSymbol name="bell.fill" size={size} color={color} />
           ),
         }}
       />

@@ -10,12 +10,13 @@ export const Colors = {
     background: '#0B0F14',      // Deep black
     card: '#141A22',            // Dark gray card background
     primary: '#00E5FF',         // Cyan accent
-    secondary: '#7C4DFF',       // Violet accent
+    secondary: '#8E2DE2',       // Violet accent (Neo Esports)
     text: '#EAEAEA',            // Light gray text
     textSecondary: '#9BA1A6',   // Muted text
     border: '#1F2937',          // Subtle border
-    success: '#10B981',         // Green for available slots
+    success: '#00FF9D',         // Neon green
     error: '#EF4444',           // Red for errors
+    danger: '#FF3B3B',          // Danger red
     tint: '#00E5FF',
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
@@ -29,8 +30,9 @@ export const Colors = {
     text: '#1C1C1C',            // Dark gray text
     textSecondary: '#687076',   // Muted text
     border: '#E5E7EB',          // Subtle border
-    success: '#10B981',         // Green for available slots
+    success: '#10B981',         // Green
     error: '#EF4444',           // Red for errors
+    danger: '#FF3B3B',          // Danger red
     tint: '#1A73E8',
     icon: '#687076',
     tabIconDefault: '#687076',

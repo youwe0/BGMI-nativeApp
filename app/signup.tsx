@@ -50,9 +50,9 @@ export default function SignUpScreen() {
             {/* ── Branding ── */}
             <View style={styles.brand}>
               <View style={[styles.logoCircle, { backgroundColor: colors.secondary }]}>
-                <Text style={styles.logoText}>YW</Text>
+                <Text style={styles.logoText}>TT</Text>
               </View>
-              <Text style={[styles.appName, { color: colors.text }]}>YouWe</Text>
+              <Text style={[styles.appName, { color: colors.text }]}>Too Too</Text>
               <Text style={[styles.tagline, { color: colors.secondary }]}>
                 Join the Arena
               </Text>

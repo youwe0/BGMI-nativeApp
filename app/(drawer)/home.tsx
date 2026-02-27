@@ -11,13 +11,22 @@ import { useTheme } from '@/contexts/ThemeContext';
 
 const FEATURES = [
   {
+    id: 'arena',
+    emoji: '⚡',
+    title: 'Challenge Arena',
+    desc: 'Find and join live player challenges. Classic, TDM and WOW modes with real prize pools.',
+    cta: 'Enter →',
+    route: '/(drawer)/challenge-arena' as const,
+    accent: 'primary' as const,
+  },
+  {
     id: 'tournaments',
     emoji: '🏆',
     title: 'Browse Tournaments',
     desc: 'Discover live, upcoming and completed BGMI tournaments. Filter by status and join with one tap.',
     cta: 'Browse →',
     route: '/(drawer)/tournaments' as const,
-    accent: 'primary' as const,
+    accent: 'secondary' as const,
   },
   {
     id: 'create',
@@ -58,7 +67,7 @@ export default function HomeScreen() {
         {/* ── Header ── */}
         <View style={styles.header}>
           <Text style={[styles.greeting, { color: colors.textSecondary }]}>WELCOME TO</Text>
-          <Text style={[styles.title, { color: colors.text }]}>YouWe</Text>
+          <Text style={[styles.title, { color: colors.text }]}>Too Too</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             Your BGMI tournament platform
           </Text>

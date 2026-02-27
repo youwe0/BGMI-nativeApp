@@ -43,9 +43,9 @@ export default function LoginScreen() {
             {/* ── Branding ── */}
             <View style={styles.brand}>
               <View style={[styles.logoCircle, { backgroundColor: colors.primary }]}>
-                <Text style={styles.logoText}>YW</Text>
+                <Text style={styles.logoText}>TT</Text>
               </View>
-              <Text style={[styles.appName, { color: colors.text }]}>YouWe</Text>
+              <Text style={[styles.appName, { color: colors.text }]}>Too Too</Text>
               <Text style={[styles.tagline, { color: isDark ? colors.primary : colors.secondary }]}>
                 Host. Join. Dominate.
               </Text>
@@ -55,7 +55,7 @@ export default function LoginScreen() {
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
               <Text style={[styles.cardTitle, { color: colors.text }]}>Welcome Back</Text>
               <Text style={[styles.cardSub, { color: colors.textSecondary }]}>
-                Login to your YouWe account
+                Login to your Too Too account
               </Text>
 
               <View style={styles.field}>

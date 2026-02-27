@@ -17,6 +17,11 @@ function RootLayoutNav() {
         <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
         <Stack.Screen name="create-tournament" options={{ headerShown: false }} />
         <Stack.Screen name="tournament-detail" options={{ headerShown: false }} />
+        <Stack.Screen name="challenge-detail" options={{ headerShown: false }} />
+        <Stack.Screen name="create-challenge" options={{ headerShown: false }} />
+        <Stack.Screen name="achievements" options={{ headerShown: false }} />
+        <Stack.Screen name="public-profile" options={{ headerShown: false }} />
+        <Stack.Screen name="chat" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style={isDark ? 'light' : 'dark'} />
     </NavigationThemeProvider>
