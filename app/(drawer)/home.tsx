@@ -1,165 +1,148 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
-
-const FEATURES = [
-  {
-    id: 'arena',
-    emoji: '⚡',
-    title: 'Challenge Arena',
-    desc: 'Find and join live player challenges. Classic, TDM and WOW modes with real prize pools.',
-    cta: 'Enter →',
-    route: '/(drawer)/challenge-arena' as const,
-    accent: 'primary' as const,
-  },
-  {
-    id: 'tournaments',
-    emoji: '🏆',
-    title: 'Browse Tournaments',
-    desc: 'Discover live, upcoming and completed BGMI tournaments. Filter by status and join with one tap.',
-    cta: 'Browse →',
-    route: '/(drawer)/tournaments' as const,
-    accent: 'secondary' as const,
-  },
-  {
-    id: 'create',
-    emoji: '➕',
-    title: 'Host a Tournament',
-    desc: 'Create Classic, TDM or WOW Mode tournaments. Set entry fees, prize pools and room codes.',
-    cta: 'Create →',
-    route: '/create-tournament' as const,
-    accent: 'secondary' as const,
-  },
-  {
-    id: 'profile',
-    emoji: '👤',
-    title: 'My Profile',
-    desc: 'View your stats, rank, match history and performance across all game modes.',
-    cta: 'View →',
-    route: '/(drawer)/profile' as const,
-    accent: 'primary' as const,
-  },
-  {
-    id: 'modes',
-    emoji: '🎮',
-    title: 'Three Game Modes',
-    desc: 'Classic Battle Royale · Team Deathmatch · WOW Custom Modes. Solo, Duo & Squad formats.',
-    cta: null,
-    route: null,
-    accent: 'secondary' as const,
-  },
-];
+import { profileService } from '@/services/profileService';
 
 export default function HomeScreen() {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
+  const player = profileService.getMyProfile();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
 
-        {/* ── Header ── */}
-        <View style={styles.header}>
-          <Text style={[styles.greeting, { color: colors.textSecondary }]}>WELCOME TO</Text>
-          <Text style={[styles.title, { color: colors.text }]}>Too Too</Text>
-          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Your BGMI tournament platform
-          </Text>
-        </View>
+        {/* ── Header / Greeting ── */}
+        <LinearGradient
+          colors={isDark
+            ? [colors.primary + '18', 'transparent']
+            : [colors.primary + '12', 'transparent']}
+          style={styles.headerGrad}>
+          <View style={styles.headerRow}>
+            <View>
+              <Text style={[styles.greeting, { color: colors.textSecondary }]}>WELCOME BACK</Text>
+              <Text style={[styles.playerName, { color: colors.text }]} numberOfLines={1}>
+                {player.username}
+              </Text>
+            </View>
+            <View style={[styles.tierBadge, { backgroundColor: colors.primary + '20', borderColor: colors.primary + '50' }]}>
+              <Text style={[styles.tierText, { color: colors.primary }]}>{player.tier}</Text>
+            </View>
+          </View>
 
-        {/* ── Quick Stats ── */}
-        <View
-          style={[
-            styles.statsBanner,
-            { backgroundColor: colors.primary + '15', borderColor: colors.primary + '40' },
-          ]}>
-          <View style={styles.statItem}>
-            <Text style={[styles.statValue, { color: colors.primary }]}>24</Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Tournaments</Text>
+          {/* ── Quick Stats ── */}
+          <View style={[styles.statsBar, { backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', borderColor: colors.border }]}>
+            {[
+              { label: 'K/D', value: player.kdRatio.toFixed(1), color: colors.primary },
+              { label: 'Wins', value: String(player.recentMatches.filter(m => m.result === 'win').length), color: colors.success },
+              { label: 'Earnings', value: `₹${player.totalEarnings.toLocaleString()}`, color: '#FFD700' },
+              { label: 'Matches', value: String(player.totalMatches), color: colors.text },
+            ].map((stat, i, arr) => (
+              <React.Fragment key={stat.label}>
+                <View style={styles.statItem}>
+                  <Text style={[styles.statValue, { color: stat.color }]}>{stat.value}</Text>
+                  <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{stat.label}</Text>
+                </View>
+                {i < arr.length - 1 && <View style={[styles.statDiv, { backgroundColor: colors.border }]} />}
+              </React.Fragment>
+            ))}
           </View>
-          <View style={[styles.statDivider, { backgroundColor: colors.primary + '30' }]} />
-          <View style={styles.statItem}>
-            <Text style={[styles.statValue, { color: colors.primary }]}>580</Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Players</Text>
-          </View>
-          <View style={[styles.statDivider, { backgroundColor: colors.primary + '30' }]} />
-          <View style={styles.statItem}>
-            <Text style={[styles.statValue, { color: colors.primary }]}>₹50K</Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Prize Pool</Text>
-          </View>
-        </View>
+        </LinearGradient>
 
-        {/* ── Feature Cards ── */}
+        {/* ── Section label ── */}
         <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>QUICK ACCESS</Text>
 
-        <View style={styles.cards}>
-          {FEATURES.map((feature) => {
-            const accent = feature.accent === 'primary' ? colors.primary : colors.secondary;
+        {/* ── Challenge Arena — Hero Card ── */}
+        <TouchableOpacity
+          activeOpacity={0.88}
+          onPress={() => router.push('/(drawer)/challenge-arena' as any)}
+          style={styles.heroCardWrap}>
+          <LinearGradient
+            colors={isDark
+              ? [colors.primary + '30', colors.secondary + '25']
+              : [colors.primary + '20', colors.secondary + '15']}
+            style={[styles.heroCard, { borderColor: colors.primary + '40' }]}
+            start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+            {/* Live badge */}
+            <View style={[styles.liveBadge, { backgroundColor: colors.success + '20', borderColor: colors.success + '50' }]}>
+              <View style={[styles.liveDot, { backgroundColor: colors.success }]} />
+              <Text style={[styles.liveText, { color: colors.success }]}>LIVE</Text>
+            </View>
 
-            if (feature.route) {
-              return (
-                <TouchableOpacity
-                  key={feature.id}
-                  style={[
-                    styles.card,
-                    { backgroundColor: colors.card, borderColor: colors.border },
-                  ]}
-                  onPress={() => router.push(feature.route as any)}
-                  activeOpacity={0.8}>
-                  <View style={styles.cardBody}>
-                    <View style={[styles.emojiBox, { backgroundColor: accent + '20' }]}>
-                      <Text style={styles.cardEmoji}>{feature.emoji}</Text>
-                    </View>
-                    <View style={styles.cardText}>
-                      <Text style={[styles.cardTitle, { color: colors.text }]}>
-                        {feature.title}
-                      </Text>
-                      <Text style={[styles.cardDesc, { color: colors.textSecondary }]}>
-                        {feature.desc}
-                      </Text>
-                    </View>
-                  </View>
-                  {feature.cta && (
-                    <View style={[styles.ctaChip, { backgroundColor: accent + '20' }]}>
-                      <Text style={[styles.ctaChipText, { color: accent }]}>
-                        {feature.cta}
-                      </Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              );
-            }
-
-            // Non-clickable info card
-            return (
-              <View
-                key={feature.id}
-                style={[
-                  styles.card,
-                  { backgroundColor: colors.card, borderColor: colors.border, opacity: 0.7 },
-                ]}>
-                <View style={styles.cardBody}>
-                  <View style={[styles.emojiBox, { backgroundColor: accent + '20' }]}>
-                    <Text style={styles.cardEmoji}>{feature.emoji}</Text>
-                  </View>
-                  <View style={styles.cardText}>
-                    <Text style={[styles.cardTitle, { color: colors.text }]}>
-                      {feature.title}
-                    </Text>
-                    <Text style={[styles.cardDesc, { color: colors.textSecondary }]}>
-                      {feature.desc}
-                    </Text>
-                  </View>
-                </View>
+            <View style={styles.heroCardBody}>
+              <View style={[styles.heroIconBox, { backgroundColor: colors.primary + '25' }]}>
+                <Text style={styles.heroEmoji}>⚡</Text>
               </View>
-            );
-          })}
+              <View style={styles.heroTextBlock}>
+                <Text style={[styles.heroCardTitle, { color: colors.text }]}>Challenge Arena</Text>
+                <Text style={[styles.heroCardDesc, { color: colors.textSecondary }]}>
+                  Find and join live 1v1 player challenges — Classic, TDM & WOW with real prize pools.
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.heroFooter}>
+              <Text style={[styles.heroStat, { color: colors.textSecondary }]}>
+                6 challenges open
+              </Text>
+              <View style={[styles.heroCta, { backgroundColor: colors.primary }]}>
+                <Text style={styles.heroCtaText}>Enter →</Text>
+              </View>
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* ── Other feature cards ── */}
+        <View style={styles.grid}>
+          <FeatureCard
+            emoji="➕"
+            title="Host"
+            desc="Create your own tournament"
+            cta="Create"
+            accent={colors.primary}
+            colors={colors}
+            isDark={isDark}
+            onPress={() => router.push('/create-tournament' as any)}
+          />
+          <FeatureCard
+            emoji="📊"
+            title="Leaderboard"
+            desc="See who's on top this week"
+            cta="View"
+            accent="#FFD700"
+            colors={colors}
+            isDark={isDark}
+            onPress={() => router.push('/(drawer)/leaderboard' as any)}
+          />
+          <FeatureCard
+            emoji="💰"
+            title="Wallet"
+            desc="Balance & transactions"
+            cta="Open"
+            accent={colors.success}
+            colors={colors}
+            isDark={isDark}
+            onPress={() => router.push('/(drawer)/wallet' as any)}
+          />
+        </View>
+
+        {/* ── Modes Banner ── */}
+        <View style={[styles.modesBanner, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <Text style={[styles.modesTitle, { color: colors.text }]}>Game Modes</Text>
+          <View style={styles.modesRow}>
+            {[
+              { emoji: '🪂', name: 'Classic', sub: 'Battle Royale' },
+              { emoji: '💥', name: 'TDM', sub: 'Team Deathmatch' },
+              { emoji: '🌀', name: 'WOW', sub: 'Custom Arenas' },
+            ].map((mode) => (
+              <View key={mode.name} style={[styles.modeItem, { backgroundColor: colors.background }]}>
+                <Text style={styles.modeEmoji}>{mode.emoji}</Text>
+                <Text style={[styles.modeName, { color: colors.text }]}>{mode.name}</Text>
+                <Text style={[styles.modeSub, { color: colors.textSecondary }]}>{mode.sub}</Text>
+              </View>
+            ))}
+          </View>
         </View>
 
         <View style={{ height: 32 }} />
@@ -168,57 +151,90 @@ export default function HomeScreen() {
   );
 }
 
+/* Small 2-column grid card */
+function FeatureCard({ emoji, title, desc, cta, accent, colors, isDark, onPress }: any) {
+  return (
+    <TouchableOpacity
+      style={[styles.gridCard, { backgroundColor: colors.card, borderColor: accent + '35' }]}
+      activeOpacity={0.85}
+      onPress={onPress}>
+      {/* colored top strip */}
+      <LinearGradient
+        colors={[accent + '35', accent + '08']}
+        style={styles.cardStrip}
+        start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+      />
+      <View style={[styles.gridIconBox, { backgroundColor: accent + '18' }]}>
+        <Text style={styles.gridEmoji}>{emoji}</Text>
+      </View>
+      <Text style={[styles.gridTitle, { color: colors.text }]}>{title}</Text>
+      <Text style={[styles.gridDesc, { color: colors.textSecondary }]} numberOfLines={2}>{desc}</Text>
+      <Text style={[styles.gridCta, { color: accent }]}>{cta} →</Text>
+    </TouchableOpacity>
+  );
+}
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scroll: { paddingHorizontal: 20, paddingBottom: 20 },
+  scroll: { paddingBottom: 20 },
 
-  header: { paddingTop: 8, marginBottom: 20 },
-  greeting: { fontSize: 11, fontWeight: '700', letterSpacing: 2 },
-  title: { fontSize: 34, fontWeight: '900', letterSpacing: 1, marginBottom: 4 },
-  subtitle: { fontSize: 14 },
+  headerGrad: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 20, marginBottom: 8 },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  greeting: { fontSize: 10, fontWeight: '700', letterSpacing: 2, marginBottom: 3 },
+  playerName: { fontSize: 22, fontWeight: '800' },
+  tierBadge: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1 },
+  tierText: { fontSize: 12, fontWeight: '700' },
 
-  statsBanner: {
-    flexDirection: 'row',
-    borderRadius: 14,
-    borderWidth: 1,
-    paddingVertical: 16,
-    marginBottom: 26,
+  statsBar: {
+    flexDirection: 'row', borderRadius: 14, borderWidth: 1,
+    paddingVertical: 14,
   },
   statItem: { flex: 1, alignItems: 'center' },
-  statValue: { fontSize: 20, fontWeight: '800' },
-  statLabel: { fontSize: 11, marginTop: 2, fontWeight: '500' },
-  statDivider: { width: 1 },
+  statValue: { fontSize: 17, fontWeight: '800', marginBottom: 2 },
+  statLabel: { fontSize: 10, fontWeight: '600' },
+  statDiv: { width: 1, marginVertical: 4 },
 
-  sectionLabel: { fontSize: 11, fontWeight: '700', letterSpacing: 2, marginBottom: 14 },
+  sectionLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 2, marginBottom: 12, paddingHorizontal: 20 },
 
-  cards: { gap: 12 },
-  card: {
-    borderRadius: 16,
-    borderWidth: 1,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  heroCardWrap: { marginHorizontal: 16, marginBottom: 12 },
+  heroCard: { borderRadius: 18, borderWidth: 1, padding: 16 },
+  liveBadge: {
+    flexDirection: 'row', alignItems: 'center', gap: 5,
+    alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4,
+    borderRadius: 20, borderWidth: 1, marginBottom: 12,
   },
-  cardBody: { flexDirection: 'row', alignItems: 'flex-start', flex: 1, gap: 14 },
-  emojiBox: {
-    width: 46,
-    height: 46,
-    borderRadius: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexShrink: 0,
+  liveDot: { width: 6, height: 6, borderRadius: 3 },
+  liveText: { fontSize: 10, fontWeight: '800', letterSpacing: 1 },
+
+  heroCardBody: { flexDirection: 'row', gap: 14, marginBottom: 14 },
+  heroIconBox: { width: 52, height: 52, borderRadius: 15, justifyContent: 'center', alignItems: 'center' },
+  heroEmoji: { fontSize: 26 },
+  heroTextBlock: { flex: 1 },
+  heroCardTitle: { fontSize: 18, fontWeight: '800', marginBottom: 5 },
+  heroCardDesc: { fontSize: 13, lineHeight: 19 },
+
+  heroFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  heroStat: { fontSize: 12, fontWeight: '500' },
+  heroCta: { paddingHorizontal: 18, paddingVertical: 9, borderRadius: 10 },
+  heroCtaText: { fontSize: 13, fontWeight: '800', color: '#000' },
+
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingHorizontal: 16, marginBottom: 12 },
+  gridCard: {
+    width: '47.5%', borderRadius: 16, borderWidth: 1,
+    overflow: 'hidden', paddingBottom: 14,
   },
-  cardEmoji: { fontSize: 22 },
-  cardText: { flex: 1 },
-  cardTitle: { fontSize: 15, fontWeight: '700', marginBottom: 4 },
-  cardDesc: { fontSize: 12, lineHeight: 18 },
-  ctaChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 10,
-    flexShrink: 0,
-    marginLeft: 8,
-  },
-  ctaChipText: { fontSize: 12, fontWeight: '700' },
+  cardStrip: { height: 4, marginBottom: 14 },
+  gridIconBox: { width: 44, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginHorizontal: 14, marginBottom: 10 },
+  gridEmoji: { fontSize: 22 },
+  gridTitle: { fontSize: 15, fontWeight: '800', marginHorizontal: 14, marginBottom: 4 },
+  gridDesc: { fontSize: 11, lineHeight: 16, marginHorizontal: 14, marginBottom: 10 },
+  gridCta: { fontSize: 12, fontWeight: '700', marginHorizontal: 14 },
+
+  modesBanner: { marginHorizontal: 16, borderRadius: 18, borderWidth: 1, padding: 16 },
+  modesTitle: { fontSize: 15, fontWeight: '700', marginBottom: 14 },
+  modesRow: { flexDirection: 'row', gap: 10 },
+  modeItem: { flex: 1, borderRadius: 14, padding: 12, alignItems: 'center' },
+  modeEmoji: { fontSize: 24, marginBottom: 6 },
+  modeName: { fontSize: 13, fontWeight: '800', marginBottom: 2 },
+  modeSub: { fontSize: 10, fontWeight: '500', textAlign: 'center' },
 });

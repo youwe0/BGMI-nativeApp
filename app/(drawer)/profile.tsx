@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   avatarText: { fontSize: 38, fontWeight: '900' },
   username: { fontSize: 22, fontWeight: '800', marginBottom: 8 },
-  rankBadge: { marginBottom: 12 },
+  rankBadge: { marginBottom: 12, alignSelf: 'center' },
   tagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center' },
   tag: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
   tagText: { fontSize: 11, fontWeight: '600' },

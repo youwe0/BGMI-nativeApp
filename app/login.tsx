@@ -8,12 +8,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
 
-export default function SignUpScreen() {
+export default function LoginScreen() {
   const { colors, isDark } = useTheme();
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -22,29 +20,30 @@ export default function SignUpScreen() {
         {/* ── Hero Header ── */}
         <LinearGradient
           colors={isDark
-            ? ['#110d1f', colors.secondary + '22', '#0B0F14']
-            : ['#f5f0ff', colors.secondary + '18', '#ffffff']}
+            ? ['#0d1a2a', colors.primary + '22', '#0B0F14']
+            : ['#e8f4ff', colors.primary + '18', '#ffffff']}
           style={styles.heroArea}>
-          <View style={[styles.glow, { backgroundColor: colors.secondary }]} />
+          {/* corner glow */}
+          <View style={[styles.glow, { backgroundColor: colors.primary }]} />
 
           <SafeAreaView edges={['top']}>
             <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-              <Text style={[styles.backText, { color: colors.secondary }]}>← Back</Text>
+              <Text style={[styles.backText, { color: colors.primary }]}>← Back</Text>
             </TouchableOpacity>
           </SafeAreaView>
 
           <View style={styles.heroContent}>
-            {/* <View style={[styles.logoRing, { borderColor: colors.secondary + '55' }]}>
+            {/* <View style={[styles.logoRing, { borderColor: colors.primary + '55' }]}>
               <LinearGradient
-                colors={[colors.secondary, colors.primary + 'DD']}
+                colors={[colors.primary + 'DD', colors.secondary]}
                 style={styles.logoGrad}
                 start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
                 <Text style={styles.logoText}>TT</Text>
               </LinearGradient>
             </View> */}
-            <Text style={[styles.heroTitle, { color: colors.text }]}>Join the Arena</Text>
+            <Text style={[styles.heroTitle, { color: colors.text }]}>Welcome Back</Text>
             <Text style={[styles.heroSub, { color: colors.textSecondary }]}>
-              Create your Too Too account
+              Login to your Too Too account
             </Text>
           </View>
         </LinearGradient>
@@ -57,13 +56,6 @@ export default function SignUpScreen() {
           showsVerticalScrollIndicator={false}>
 
           <InputField
-            label="Username"
-            value={username}
-            onChangeText={setUsername}
-            placeholder="e.g. ProGamer99"
-            colors={colors}
-          />
-          <InputField
             label="Email"
             value={email}
             onChangeText={setEmail}
@@ -71,41 +63,30 @@ export default function SignUpScreen() {
             keyboardType="email-address"
             colors={colors}
           />
+
           <InputField
             label="Password"
             value={password}
             onChangeText={setPassword}
-            placeholder="Create a strong password"
-            secureTextEntry
-            colors={colors}
-          />
-          <InputField
-            label="Confirm Password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            placeholder="Re-enter your password"
+            placeholder="Enter your password"
             secureTextEntry
             colors={colors}
           />
 
-          {/* Terms note */}
-          <Text style={[styles.termsText, { color: colors.textSecondary }]}>
-            By creating an account you agree to our{' '}
-            <Text style={{ color: colors.secondary }}>Terms of Service</Text>
-            {' & '}
-            <Text style={{ color: colors.secondary }}>Privacy Policy</Text>
-          </Text>
+          <TouchableOpacity style={styles.forgotRow}>
+            <Text style={[styles.forgotText, { color: colors.primary }]}>Forgot Password?</Text>
+          </TouchableOpacity>
 
-          {/* Create Account Button */}
+          {/* Login Button */}
           <TouchableOpacity
             activeOpacity={0.88}
-            onPress={() => router.replace('/login')}
+            onPress={() => router.replace('/(drawer)/home')}
             style={styles.primaryBtnWrap}>
             <LinearGradient
-              colors={[colors.secondary, colors.primary]}
+              colors={[colors.primary, colors.secondary]}
               style={styles.primaryBtn}
               start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
-              <Text style={styles.primaryBtnText}>Create Account  →</Text>
+              <Text style={styles.primaryBtnText}>Login  →</Text>
             </LinearGradient>
           </TouchableOpacity>
 
@@ -116,13 +97,13 @@ export default function SignUpScreen() {
             <View style={[styles.divider, { backgroundColor: colors.border }]} />
           </View>
 
-          {/* Login link */}
+          {/* Sign Up link */}
           <TouchableOpacity
             style={[styles.secondaryBtn, { borderColor: colors.border }]}
-            onPress={() => router.replace('/login')}
+            onPress={() => router.replace('/signup')}
             activeOpacity={0.85}>
             <Text style={[styles.secondaryBtnText, { color: colors.text }]}>
-              Already have an account? Login
+              Create an Account
             </Text>
           </TouchableOpacity>
 
@@ -133,7 +114,11 @@ export default function SignUpScreen() {
   );
 }
 
-function InputField({ label, value, onChangeText, placeholder, keyboardType, secureTextEntry, colors }: any) {
+/* Reusable field */
+function InputField({
+  label, value, onChangeText, placeholder,
+  keyboardType, secureTextEntry, colors,
+}: any) {
   return (
     <View style={styles.field}>
       <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>{label}</Text>
@@ -154,42 +139,44 @@ function InputField({ label, value, onChangeText, placeholder, keyboardType, sec
 const styles = StyleSheet.create({
   container: { flex: 1 },
 
-  heroArea: { paddingBottom: 28 },
+  heroArea: { paddingBottom: 32, overflow: 'hidden' },
   glow: {
-    position: 'absolute', top: -40, left: -40,
+    position: 'absolute', top: -40, right: -40,
     width: 160, height: 160, borderRadius: 80, opacity: 0.15,
   },
   backBtn: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 4 },
   backText: { fontSize: 15, fontWeight: '600' },
 
-  heroContent: { alignItems: 'center', paddingTop: 8, paddingBottom: 4 },
+  heroContent: { alignItems: 'center', paddingTop: 12, paddingBottom: 4 },
   logoRing: {
     width: 80, height: 80, borderRadius: 40, borderWidth: 2,
-    padding: 4, marginBottom: 14,
-    shadowColor: '#8E2DE2', shadowOpacity: 0.35, shadowRadius: 14, elevation: 8,
+    padding: 4, marginBottom: 16,
+    shadowColor: '#00E5FF', shadowOpacity: 0.35, shadowRadius: 14, elevation: 8,
   },
   logoGrad: { flex: 1, borderRadius: 36, justifyContent: 'center', alignItems: 'center' },
   logoText: { fontSize: 30, fontWeight: '900', color: '#fff' },
-  heroTitle: { fontSize: 26, fontWeight: '800', marginBottom: 6 },
+  heroTitle: { fontSize: 28, fontWeight: '800', marginBottom: 6 },
   heroSub: { fontSize: 14 },
 
   sheet: { flex: 1 },
-  sheetContent: { paddingHorizontal: 24, paddingTop: 24 },
+  sheetContent: { paddingHorizontal: 24, paddingTop: 28 },
 
-  field: { marginBottom: 16 },
+  field: { marginBottom: 18 },
   fieldLabel: { fontSize: 12, fontWeight: '700', letterSpacing: 0.5, marginBottom: 8, textTransform: 'uppercase' },
   input: {
     borderRadius: 14, borderWidth: 1,
-    paddingHorizontal: 16, paddingVertical: 15, fontSize: 15,
+    paddingHorizontal: 16, paddingVertical: 15,
+    fontSize: 15,
   },
 
-  termsText: { fontSize: 12, lineHeight: 18, marginBottom: 20, textAlign: 'center' },
+  forgotRow: { alignItems: 'flex-end', marginBottom: 24, marginTop: -6 },
+  forgotText: { fontSize: 13, fontWeight: '600' },
 
   primaryBtnWrap: { marginBottom: 20 },
   primaryBtn: {
     borderRadius: 14, paddingVertical: 17,
     alignItems: 'center',
-    shadowColor: '#8E2DE2', shadowOpacity: 0.3,
+    shadowColor: '#00E5FF', shadowOpacity: 0.3,
     shadowRadius: 10, elevation: 6,
   },
   primaryBtnText: { fontSize: 16, fontWeight: '800', color: '#fff', letterSpacing: 0.5 },
@@ -198,6 +185,9 @@ const styles = StyleSheet.create({
   divider: { flex: 1, height: 1 },
   dividerText: { fontSize: 12, fontWeight: '600' },
 
-  secondaryBtn: { borderRadius: 14, paddingVertical: 16, alignItems: 'center', borderWidth: 1.5 },
+  secondaryBtn: {
+    borderRadius: 14, paddingVertical: 16,
+    alignItems: 'center', borderWidth: 1.5,
+  },
   secondaryBtnText: { fontSize: 15, fontWeight: '700' },
 });

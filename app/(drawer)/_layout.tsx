@@ -1,9 +1,26 @@
 import { Drawer } from 'expo-router/drawer';
 import { Pressable, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@/contexts/ThemeContext';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { router } from 'expo-router';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+
+/* Gradient "TooToo" brand text — per-char color interpolation */
+const BRAND_CHARS = ['T', 'o', 'o', 'T', 'o', 'o'];
+const BRAND_PALETTE = ['#eb24c0', '#c930bf', '#a73cbe', '#8548bd', '#6354bc', '#415fb9'];
+
+function GradientBrand() {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      {BRAND_CHARS.map((char, i) => (
+        <Text key={i} style={{ color: BRAND_PALETTE[i], fontSize: 20, fontWeight: '800', letterSpacing: 0.3 }}>
+          {char}
+        </Text>
+      ))}
+    </View>
+  );
+}
 
 function CustomDrawerContent(props: any) {
   const { colors, isDark, toggleTheme } = useTheme();
@@ -19,235 +36,181 @@ function CustomDrawerContent(props: any) {
         style={[styles.drawerHeader, { borderBottomColor: colors.border }]}
         onPress={() => props.navigation.navigate('profile')}
         activeOpacity={0.75}>
-        <View style={[styles.appIcon, { backgroundColor: colors.primary }]}>
-          <Text style={styles.appIconText}>TT</Text>
+        <View style={[styles.appIcon, { backgroundColor: colors.primary + '20', borderColor: colors.primary + '40', borderWidth: 1.5 }]}>
+          <Text style={[styles.appIconText, { color: colors.primary }]}>TT</Text>
         </View>
         <Text style={[styles.appTitle, { color: colors.text }]}>Too Too</Text>
-        <Text style={[styles.appSubtitle, { color: colors.textSecondary }]}>
-          Tournament Platform
-        </Text>
-        <View
-          style={[
-            styles.profilePill,
-            {
-              backgroundColor: colors.primary + '18',
-              borderColor: colors.primary + '40',
-            },
-          ]}>
-          <IconSymbol name="person.circle.fill" size={13} color={colors.primary} />
+        <View style={[styles.profilePill, { backgroundColor: colors.primary + '15', borderColor: colors.primary + '35' }]}>
+          <IconSymbol name="person.circle.fill" size={12} color={colors.primary} />
           <Text style={[styles.profilePillText, { color: colors.primary }]}>View Profile</Text>
         </View>
       </TouchableOpacity>
 
-      {/* Drawer items (Home, Tournaments visible) */}
+      {/* Drawer items */}
       <View style={styles.drawerItems}>
         <DrawerItemList {...props} />
       </View>
 
-      {/* Theme Toggle */}
-      <Pressable
-        style={[styles.themeToggle, { backgroundColor: colors.card }]}
-        onPress={toggleTheme}>
-        <IconSymbol
-          name={isDark ? 'sun.max.fill' : 'moon.fill'}
-          size={20}
-          color={colors.text}
-        />
-        <Text style={[styles.actionText, { color: colors.text }]}>
-          {isDark ? 'Light Mode' : 'Dark Mode'}
-        </Text>
-      </Pressable>
-
-      {/* Logout */}
-      <Pressable
-        style={[styles.logoutButton, { backgroundColor: colors.error + '20' }]}
-        onPress={() => router.replace('/')}>
-        <IconSymbol name="arrow.right.square" size={20} color={colors.error} />
-        <Text style={[styles.actionText, { color: colors.error }]}>Logout</Text>
-      </Pressable>
+      {/* ── Bottom Actions ── */}
+      <View style={[styles.bottomActions, { borderTopColor: colors.border }]}>
+        {/* Theme — circular icon only */}
+        <TouchableOpacity
+          style={[styles.themeCircle, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={toggleTheme}
+          activeOpacity={0.8}>
+          <IconSymbol
+            name={isDark ? 'sun.max.fill' : 'moon.fill'}
+            size={18}
+            color={isDark ? '#FFD700' : colors.secondary}
+          />
+        </TouchableOpacity>
+        {/* Logout */}
+        <Pressable
+          style={[styles.logoutButton, { backgroundColor: colors.error + '18', borderColor: colors.error + '35' }]}
+          onPress={() => router.replace('/')}>
+          <IconSymbol name="arrow.right.square" size={17} color={colors.error} />
+          <Text style={[styles.logoutText, { color: colors.error }]}>Logout</Text>
+        </Pressable>
+      </View>
     </DrawerContentScrollView>
   );
 }
 
 export default function DrawerLayout() {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
 
   return (
     <Drawer
       initialRouteName="home"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={({ navigation }) => ({
-        headerStyle: { backgroundColor: colors.background },
+        headerBackground: () => (
+          <LinearGradient
+            colors={isDark
+              ? [colors.background, colors.background + 'E8', colors.primary + '22']
+              : [colors.background, colors.background + 'F0', colors.primary + '16']}
+            style={{ flex: 1 }}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+          />
+        ),
         headerTintColor: colors.text,
-        headerTitleStyle: { fontWeight: '700' },
+        headerTitle: () => null,
         drawerStyle: { backgroundColor: colors.background },
         drawerActiveTintColor: colors.primary,
         drawerInactiveTintColor: colors.textSecondary,
-        drawerActiveBackgroundColor: colors.primary + '20',
-        drawerItemStyle: { borderRadius: 12 },
-        drawerLabelStyle: { fontSize: 16, fontWeight: '600' },
-        // Profile icon in every screen's top-right header
+        drawerActiveBackgroundColor: colors.primary + '18',
+        drawerItemStyle: { borderRadius: 10, marginVertical: 1, height: 44 },
+        drawerLabelStyle: { fontSize: 13, fontWeight: '600', marginLeft: -8 },
+        headerLeft: () => (
+          <View style={styles.headerLeft}>
+            <TouchableOpacity
+              onPress={() => navigation.openDrawer()}
+              style={styles.headerAvatarBtn}
+              activeOpacity={0.8}>
+              <IconSymbol name="person.circle.fill" size={26} color={colors.primary} />
+            </TouchableOpacity>
+            <GradientBrand />
+          </View>
+        ),
         headerRight: () => (
-          <Pressable
-            onPress={() => navigation.navigate('profile')}
-            style={styles.headerProfileBtn}>
-            <IconSymbol name="person.circle.fill" size={28} color={colors.primary} />
-          </Pressable>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('notifications')}
+            style={styles.headerNotifBtn}
+            activeOpacity={0.8}>
+            <IconSymbol name="bell.fill" size={22} color={colors.text} />
+          </TouchableOpacity>
         ),
       })}>
 
-      {/* Home — shown in sidebar */}
       <Drawer.Screen
         name="home"
         options={{
           title: 'Home',
           drawerLabel: 'Home',
-          drawerIcon: ({ color, size }) => (
-            <IconSymbol name="house.fill" size={size} color={color} />
-          ),
+          drawerIcon: ({ color, size }) => <IconSymbol name="house.fill" size={size - 2} color={color} />,
         }}
       />
-
-      {/* Challenge Arena — shown in sidebar */}
       <Drawer.Screen
         name="challenge-arena"
         options={{
           title: 'Challenge Arena',
           drawerLabel: 'Challenge Arena',
-          drawerIcon: ({ color, size }) => (
-            <IconSymbol name="flame.fill" size={size} color={color} />
-          ),
+          drawerIcon: ({ color, size }) => <IconSymbol name="flame.fill" size={size - 2} color={color} />,
         }}
       />
-
-      {/* Tournaments — shown in sidebar */}
-      <Drawer.Screen
-        name="tournaments"
-        options={{
-          title: 'Tournaments',
-          drawerLabel: 'Tournaments',
-          drawerIcon: ({ color, size }) => (
-            <IconSymbol name="trophy.fill" size={size} color={color} />
-          ),
-        }}
-      />
-
-      {/* Leaderboard — shown in sidebar */}
       <Drawer.Screen
         name="leaderboard"
         options={{
           title: 'Leaderboard',
           drawerLabel: 'Leaderboard',
-          drawerIcon: ({ color, size }) => (
-            <IconSymbol name="chart.bar.fill" size={size} color={color} />
-          ),
+          drawerIcon: ({ color, size }) => <IconSymbol name="chart.bar.fill" size={size - 2} color={color} />,
         }}
       />
-
-      {/* Wallet — shown in sidebar */}
       <Drawer.Screen
         name="wallet"
         options={{
           title: 'Wallet',
           drawerLabel: 'Wallet',
-          drawerIcon: ({ color, size }) => (
-            <IconSymbol name="wallet.pass.fill" size={size} color={color} />
-          ),
+          drawerIcon: ({ color, size }) => <IconSymbol name="wallet.pass.fill" size={size - 2} color={color} />,
         }}
       />
-
-      {/* Notifications — shown in sidebar */}
       <Drawer.Screen
         name="notifications"
         options={{
           title: 'Notifications',
           drawerLabel: 'Notifications',
-          drawerIcon: ({ color, size }) => (
-            <IconSymbol name="bell.fill" size={size} color={color} />
-          ),
+          drawerIcon: ({ color, size }) => <IconSymbol name="bell.fill" size={size - 2} color={color} />,
         }}
       />
 
-      {/* Slots — hidden from sidebar */}
-      <Drawer.Screen
-        name="slots"
-        options={{
-          title: 'Matches',
-          drawerItemStyle: { display: 'none' },
-        }}
-      />
-
-      {/* Profile — hidden from sidebar, opened via header icon or drawer header */}
-      <Drawer.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          drawerItemStyle: { display: 'none' },
-        }}
-      />
+      {/* Hidden from sidebar */}
+      <Drawer.Screen name="tournaments" options={{ drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="slots" options={{ drawerItemStyle: { display: 'none' } }} />
+      <Drawer.Screen name="profile" options={{ title: 'Profile', drawerItemStyle: { display: 'none' } }} />
     </Drawer>
   );
 }
 
 const styles = StyleSheet.create({
-  drawerContent: { flex: 1, paddingTop: 20 },
+  drawerContent: { flex: 1, paddingTop: 16 },
 
   drawerHeader: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    marginBottom: 16,
-    borderBottomWidth: 1,
-    alignItems: 'center',
+    paddingHorizontal: 18, paddingBottom: 16,
+    marginBottom: 10, borderBottomWidth: 1, alignItems: 'center',
   },
   appIcon: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
+    width: 52, height: 52, borderRadius: 26,
+    justifyContent: 'center', alignItems: 'center', marginBottom: 10,
   },
-  appIconText: { fontSize: 26, fontWeight: '800', color: '#000' },
-  appTitle: { fontSize: 24, fontWeight: '800', marginBottom: 4 },
-  appSubtitle: {
-    fontSize: 12,
-    fontWeight: '500',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 12,
-  },
+  appIconText: { fontSize: 20, fontWeight: '900' },
+  appTitle: { fontSize: 20, fontWeight: '800', marginBottom: 10 },
   profilePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 20,
-    borderWidth: 1,
+    flexDirection: 'row', alignItems: 'center', gap: 5,
+    paddingHorizontal: 12, paddingVertical: 5, borderRadius: 20, borderWidth: 1,
   },
   profilePillText: { fontSize: 11, fontWeight: '700' },
 
-  drawerItems: { flex: 1, paddingHorizontal: 12 },
+  drawerItems: { flex: 1, paddingHorizontal: 10 },
 
-  themeToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginHorizontal: 20,
-    marginBottom: 12,
-    padding: 16,
-    borderRadius: 12,
+  bottomActions: {
+    flexDirection: 'row', alignItems: 'center', gap: 10,
+    paddingHorizontal: 14, paddingVertical: 12,
+    marginTop: 8, borderTopWidth: 1,
+  },
+  themeCircle: {
+    width: 40, height: 40, borderRadius: 20,
+    justifyContent: 'center', alignItems: 'center',
+    borderWidth: 1, flexShrink: 0,
   },
   logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    padding: 16,
-    borderRadius: 12,
+    flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8,
+    paddingHorizontal: 14, paddingVertical: 10,
+    borderRadius: 12, borderWidth: 1,
   },
-  actionText: { fontSize: 16, fontWeight: '600' },
+  logoutText: { fontSize: 13, fontWeight: '700' },
 
-  headerProfileBtn: { marginRight: 16, padding: 4 },
+  headerLeft: { flexDirection: 'row', alignItems: 'center', marginLeft: 14, gap: 8 },
+  headerAvatarBtn: { padding: 2 },
+  headerNotifBtn: { marginRight: 14, padding: 4 },
 });

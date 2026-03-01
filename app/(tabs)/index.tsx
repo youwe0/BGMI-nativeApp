@@ -1,191 +1,212 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { useTheme } from '@/contexts/ThemeContext';
-import { LinearGradient } from 'expo-linear-gradient';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import { useTheme } from "@/contexts/ThemeContext";
 
-export default function LoginScreen() {
+export default function LandingScreen() {
   const { colors, isDark } = useTheme();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={styles.container}>
+      {/* Full-screen gradient background */}
       <LinearGradient
         colors={
           isDark
-            ? ['rgba(0,229,255,0.1)', 'transparent', 'rgba(124,77,255,0.12)']
-            : ['rgba(26,115,232,0.1)', 'transparent', 'rgba(255,112,67,0.12)']
+            ? ["#0B0F14", "#0d1520", "#0B0F14"]
+            : ["#f0f4ff", "#ffffff", "#f5f0ff"]
         }
         style={StyleSheet.absoluteFill}
       />
 
-      <SafeAreaView style={{ flex: 1 }}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <ScrollView
-            contentContainerStyle={styles.scroll}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled">
+      {/* Corner glows */}
+      <View style={[styles.glowTopLeft, { backgroundColor: colors.primary }]} />
+      <View
+        style={[styles.glowBottomRight, { backgroundColor: colors.secondary }]}
+      />
 
-            {/* ── Branding ── */}
-            <View style={styles.brand}>
-              <View style={[styles.logoCircle, { backgroundColor: colors.primary }]}>
-                <Text style={styles.logoText}>TT</Text>
-              </View>
-              <Text style={[styles.appName, { color: colors.text }]}>Too Too</Text>
-              <Text style={[styles.tagline, { color: isDark ? colors.primary : colors.secondary }]}>
-                Host. Join. Dominate.
-              </Text>
+      <SafeAreaView style={styles.safe}>
+        {/* ── Hero — everything in one centered block ── */}
+        <View style={styles.hero}>
+          <View
+            style={[styles.logoOuter, { borderColor: colors.primary + "70" }]}
+          >
+            {/* Inner: clips the image to a perfect circle */}
+            <View style={styles.logoInner}>
+              <Image
+                source={require("../../assets/images/AppLOGO.png")}
+                style={styles.logoImage}
+                resizeMode="cover"
+              />
             </View>
+          </View>
 
-            {/* ── Login Card ── */}
-            <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.cardTitle, { color: colors.text }]}>Welcome Back</Text>
-              <Text style={[styles.cardSub, { color: colors.textSecondary }]}>
-                Login to your Too Too account
-              </Text>
+          {/* App name */}
+          <Text style={[styles.appName, { color: colors.text }]}>Too Too</Text>
 
-              <View style={styles.field}>
-                <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Email</Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    {
-                      backgroundColor: colors.background,
-                      borderColor: colors.border,
-                      color: colors.text,
-                    },
-                  ]}
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder="your@email.com"
-                  placeholderTextColor={colors.textSecondary}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
+          {/* Tagline */}
+          <Text style={[styles.tagline, { color: colors.primary }]}>
+            Host. Join. Dominate.
+          </Text>
 
-              <View style={styles.field}>
-                <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Password</Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    {
-                      backgroundColor: colors.background,
-                      borderColor: colors.border,
-                      color: colors.text,
-                    },
-                  ]}
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="Enter your password"
-                  placeholderTextColor={colors.textSecondary}
-                  secureTextEntry
-                />
-              </View>
-
-              <TouchableOpacity style={styles.forgotRow}>
-                <Text style={[styles.forgotText, { color: colors.primary }]}>
-                  Forgot Password?
-                </Text>
-              </TouchableOpacity>
-
-              <Pressable
-                style={({ pressed }) => [
-                  styles.loginBtn,
-                  { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 },
+          {/* Feature pills */}
+          <View style={styles.pills}>
+            {["⚡ Challenges", "🏆 Tournaments", "💰 Prizes"].map((label) => (
+              <View
+                key={label}
+                style={[
+                  styles.pill,
+                  {
+                    backgroundColor: colors.primary + "12",
+                    borderColor: colors.primary + "30",
+                  },
                 ]}
-                onPress={() => router.replace('/(drawer)/home')}>
+              >
+                <Text
+                  style={[styles.pillText, { color: colors.textSecondary }]}
+                >
+                  {label}
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          {/* ── CTA Buttons ── */}
+          <View style={styles.btnRow}>
+            {/* Login — gradient fill */}
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => router.push("/login")}
+              style={styles.btnWrap}
+            >
+              <LinearGradient
+                colors={[colors.primary, colors.secondary]}
+                style={styles.loginBtn}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
                 <Text style={styles.loginBtnText}>Login</Text>
-              </Pressable>
-            </View>
+              </LinearGradient>
+            </TouchableOpacity>
 
-            {/* ── Sign Up Link ── */}
-            <View style={styles.bottomRow}>
-              <Text style={[styles.bottomText, { color: colors.textSecondary }]}>
-                Don't have an account?{'  '}
+            {/* Sign Up — outline */}
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => router.push("/signup")}
+              style={[styles.signupBtn, { borderColor: colors.primary + "60" }]}
+            >
+              <Text style={[styles.signupBtnText, { color: colors.text }]}>
+                Sign Up
               </Text>
-              <TouchableOpacity onPress={() => router.push('/signup')}>
-                <Text style={[styles.bottomLink, { color: colors.primary }]}>Sign Up</Text>
-              </TouchableOpacity>
-            </View>
-
-          </ScrollView>
-        </KeyboardAvoidingView>
+            </TouchableOpacity>
+          </View>
+        </View>
       </SafeAreaView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  scroll: { paddingHorizontal: 24, paddingTop: 48, paddingBottom: 32 },
+  container: { flex: 1, overflow: "hidden" },
+  safe: { flex: 1 },
 
-  brand: { alignItems: 'center', marginBottom: 40 },
-  logoCircle: {
-    width: 74,
-    height: 74,
-    borderRadius: 37,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-    shadowColor: '#00E5FF',
-    shadowOpacity: 0.4,
-    shadowRadius: 14,
-    elevation: 7,
+  glowTopLeft: {
+    position: "absolute",
+    top: -80,
+    left: -80,
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    opacity: 0.12,
   },
-  logoText: { fontSize: 30, fontWeight: '900', color: '#0B0F14' },
-  appName: { fontSize: 48, fontWeight: '900', letterSpacing: 2, marginBottom: 6 },
-  tagline: { fontSize: 15, fontWeight: '600', letterSpacing: 0.5 },
+  glowBottomRight: {
+    position: "absolute",
+    bottom: -60,
+    right: -60,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    opacity: 0.14,
+  },
 
-  card: {
+  hero: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    paddingHorizontal: 28,
+    paddingVertical: 20,
+  },
+
+  // Outer View: just the glowing border ring (no overflow clipping)
+  logoOuter: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    borderWidth: 2,
+    padding: 3,
+    shadowColor: "#00E5FF",
+    shadowOpacity: 0.45,
+    shadowRadius: 20,
+    elevation: 12,
+  },
+  // Inner View: clips image to a perfect circle (no border, no gap)
+  logoInner: {
+    flex: 1,
+    // borderRadius: 52,
+    overflow: "hidden",
+  },
+  logoImage: { width: "100%", height: "100%", borderRadius: 52 },
+
+  appName: {
+    fontSize: 48,
+    fontWeight: "900",
+    letterSpacing: 2,
+  },
+  tagline: {
+    fontSize: 14,
+    fontWeight: "700",
+    letterSpacing: 1,
+  },
+
+  pills: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    justifyContent: "center",
+  },
+  pill: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
     borderRadius: 20,
     borderWidth: 1,
-    padding: 24,
-    marginBottom: 24,
   },
-  cardTitle: { fontSize: 22, fontWeight: '800', marginBottom: 4 },
-  cardSub: { fontSize: 14, marginBottom: 24, lineHeight: 20 },
+  pillText: { fontSize: 12, fontWeight: "600" },
 
-  field: { marginBottom: 16 },
-  fieldLabel: { fontSize: 13, fontWeight: '600', marginBottom: 8 },
-  input: {
-    borderRadius: 12,
-    borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 13,
-    fontSize: 15,
-  },
-
-  forgotRow: { alignItems: 'flex-end', marginBottom: 22, marginTop: -4 },
-  forgotText: { fontSize: 13, fontWeight: '600' },
-
+  btnRow: { flexDirection: "row", gap: 12, width: "100%" },
+  btnWrap: { flex: 1 },
   loginBtn: {
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 4,
+    borderRadius: 14,
+    paddingVertical: 15,
+    alignItems: "center",
+    shadowColor: "#00E5FF",
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 6,
   },
-  loginBtnText: { color: '#0B0F14', fontSize: 16, fontWeight: '800' },
+  loginBtnText: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: "#fff",
+    letterSpacing: 0.5,
+  },
 
-  bottomRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
-  bottomText: { fontSize: 14 },
-  bottomLink: { fontSize: 14, fontWeight: '700' },
+  signupBtn: {
+    flex: 1,
+    borderRadius: 14,
+    paddingVertical: 15,
+    alignItems: "center",
+    borderWidth: 1.5,
+  },
+  signupBtnText: { fontSize: 15, fontWeight: "700", letterSpacing: 0.5 },
 });
