@@ -9,7 +9,7 @@ import { router } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function SignUpScreen() {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,9 +21,7 @@ export default function SignUpScreen() {
 
         {/* ── Hero Header ── */}
         <LinearGradient
-          colors={isDark
-            ? ['#110d1f', colors.secondary + '22', '#0B0F14']
-            : ['#f5f0ff', colors.secondary + '18', '#ffffff']}
+          colors={[colors.background as string, colors.secondary + '30', colors.card as string]}
           style={styles.heroArea}>
           <View style={[styles.glow, { backgroundColor: colors.secondary }]} />
 
@@ -166,7 +164,7 @@ const styles = StyleSheet.create({
   logoRing: {
     width: 80, height: 80, borderRadius: 40, borderWidth: 2,
     padding: 4, marginBottom: 14,
-    shadowColor: '#8E2DE2', shadowOpacity: 0.35, shadowRadius: 14, elevation: 8,
+    shadowColor: '#F5B301', shadowOpacity: 0.35, shadowRadius: 14, elevation: 8,
   },
   logoGrad: { flex: 1, borderRadius: 36, justifyContent: 'center', alignItems: 'center' },
   logoText: { fontSize: 30, fontWeight: '900', color: '#fff' },
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
   primaryBtn: {
     borderRadius: 14, paddingVertical: 17,
     alignItems: 'center',
-    shadowColor: '#8E2DE2', shadowOpacity: 0.3,
+    shadowColor: '#F5B301', shadowOpacity: 0.3,
     shadowRadius: 10, elevation: 6,
   },
   primaryBtnText: { fontSize: 16, fontWeight: '800', color: '#fff', letterSpacing: 0.5 },

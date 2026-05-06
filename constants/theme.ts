@@ -7,36 +7,36 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   dark: {
-    background: '#0B0F14',      // Deep black
-    card: '#141A22',            // Dark gray card background
-    primary: '#00E5FF',         // Cyan accent
-    secondary: '#8E2DE2',       // Violet accent (Neo Esports)
-    text: '#EAEAEA',            // Light gray text
-    textSecondary: '#9BA1A6',   // Muted text
-    border: '#1F2937',          // Subtle border
-    success: '#00FF9D',         // Neon green
-    error: '#EF4444',           // Red for errors
-    danger: '#FF3B3B',          // Danger red
-    tint: '#00E5FF',
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: '#00E5FF',
+    background: '#0F172A',      // Midnight Blue
+    card: '#1E293B',            // Dark Navy surface
+    primary: '#FF6B00',         // Deep Orange
+    secondary: '#F5B301',       // Gold
+    text: '#FFFFFF',            // White
+    textSecondary: '#94A3B8',   // Cool gray
+    border: '#2A3445',          // Borders / Dividers
+    success: '#00FF9D',         // Neon green (wins / positive)
+    error: '#D72638',           // Crimson Red (live / alerts)
+    danger: '#D72638',          // Crimson Red
+    tint: '#FF6B00',
+    icon: '#94A3B8',
+    tabIconDefault: '#94A3B8',
+    tabIconSelected: '#FF6B00',
   },
   light: {
-    background: '#FFFFFF',      // White
-    card: '#F5F7FA',            // Light gray card background
-    primary: '#1A73E8',         // Blue accent
-    secondary: '#FF7043',       // Orange accent
-    text: '#1C1C1C',            // Dark gray text
-    textSecondary: '#687076',   // Muted text
-    border: '#E5E7EB',          // Subtle border
-    success: '#10B981',         // Green
-    error: '#EF4444',           // Red for errors
-    danger: '#FF3B3B',          // Danger red
-    tint: '#1A73E8',
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: '#1A73E8',
+    background: '#0F172A',      // Same midnight blue — no light backgrounds
+    card: '#1E293B',            // Dark Navy surface
+    primary: '#FF6B00',         // Deep Orange
+    secondary: '#F5B301',       // Gold
+    text: '#FFFFFF',            // White
+    textSecondary: '#94A3B8',   // Cool gray
+    border: '#2A3445',          // Borders / Dividers
+    success: '#00FF9D',         // Neon green
+    error: '#D72638',           // Crimson Red
+    danger: '#D72638',          // Crimson Red
+    tint: '#FF6B00',
+    icon: '#94A3B8',
+    tabIconDefault: '#94A3B8',
+    tabIconSelected: '#FF6B00',
   },
 };
 

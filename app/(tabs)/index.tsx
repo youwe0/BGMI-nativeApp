@@ -6,17 +6,13 @@ import { router } from "expo-router";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function LandingScreen() {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <View style={styles.container}>
       {/* Full-screen gradient background */}
       <LinearGradient
-        colors={
-          isDark
-            ? ["#0B0F14", "#0d1520", "#0B0F14"]
-            : ["#f0f4ff", "#ffffff", "#f5f0ff"]
-        }
+        colors={[colors.background as string, colors.card as string, colors.background as string]}
         style={StyleSheet.absoluteFill}
       />
 
@@ -145,7 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: 55,
     borderWidth: 2,
     padding: 3,
-    shadowColor: "#00E5FF",
+    shadowColor: "#FF6B00",
     shadowOpacity: 0.45,
     shadowRadius: 20,
     elevation: 12,
@@ -189,7 +185,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingVertical: 15,
     alignItems: "center",
-    shadowColor: "#00E5FF",
+    shadowColor: "#FF6B00",
     shadowOpacity: 0.3,
     shadowRadius: 10,
     elevation: 6,

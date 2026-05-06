@@ -8,7 +8,7 @@ import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawe
 
 /* Gradient "TooToo" brand text — per-char color interpolation */
 const BRAND_CHARS = ['T', 'o', 'o', 'T', 'o', 'o'];
-const BRAND_PALETTE = ['#eb24c0', '#c930bf', '#a73cbe', '#8548bd', '#6354bc', '#415fb9'];
+const BRAND_PALETTE = ['#FF6B00', '#FD7900', '#FB8800', '#F99601', '#F7A501', '#F5B301'];
 
 function GradientBrand() {
   return (

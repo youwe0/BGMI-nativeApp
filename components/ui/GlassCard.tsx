@@ -23,8 +23,8 @@ export function GlassCard({ children, style, glowColor, padding = 16 }: GlassCar
       style={[
         styles.card,
         {
-          backgroundColor: isDark ? 'rgba(20,26,34,0.9)' : colors.card,
-          borderColor: isDark ? glow + '35' : colors.border,
+          backgroundColor: colors.card,
+          borderColor: isDark ? glow + '50' : colors.border,
           padding,
         },
         style,

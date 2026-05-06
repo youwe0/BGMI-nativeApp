@@ -36,7 +36,7 @@ export default function HomeScreen() {
             {[
               { label: 'K/D', value: player.kdRatio.toFixed(1), color: colors.primary },
               { label: 'Wins', value: String(player.recentMatches.filter(m => m.result === 'win').length), color: colors.success },
-              { label: 'Earnings', value: `₹${player.totalEarnings.toLocaleString()}`, color: '#FFD700' },
+              { label: 'Earnings', value: `₹${player.totalEarnings.toLocaleString()}`, color: colors.secondary },
               { label: 'Matches', value: String(player.totalMatches), color: colors.text },
             ].map((stat, i, arr) => (
               <React.Fragment key={stat.label}>
@@ -65,9 +65,9 @@ export default function HomeScreen() {
             style={[styles.heroCard, { borderColor: colors.primary + '40' }]}
             start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
             {/* Live badge */}
-            <View style={[styles.liveBadge, { backgroundColor: colors.success + '20', borderColor: colors.success + '50' }]}>
-              <View style={[styles.liveDot, { backgroundColor: colors.success }]} />
-              <Text style={[styles.liveText, { color: colors.success }]}>LIVE</Text>
+            <View style={[styles.liveBadge, { backgroundColor: colors.error + '20', borderColor: colors.error + '50' }]}>
+              <View style={[styles.liveDot, { backgroundColor: colors.error }]} />
+              <Text style={[styles.liveText, { color: colors.error }]}>LIVE</Text>
             </View>
 
             <View style={styles.heroCardBody}>
@@ -110,7 +110,7 @@ export default function HomeScreen() {
             title="Leaderboard"
             desc="See who's on top this week"
             cta="View"
-            accent="#FFD700"
+            accent={colors.secondary}
             colors={colors}
             isDark={isDark}
             onPress={() => router.push('/(drawer)/leaderboard' as any)}

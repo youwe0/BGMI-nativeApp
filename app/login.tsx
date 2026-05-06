@@ -9,7 +9,7 @@ import { router } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function LoginScreen() {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -19,9 +19,7 @@ export default function LoginScreen() {
 
         {/* ── Hero Header ── */}
         <LinearGradient
-          colors={isDark
-            ? ['#0d1a2a', colors.primary + '22', '#0B0F14']
-            : ['#e8f4ff', colors.primary + '18', '#ffffff']}
+          colors={[colors.background as string, colors.primary + '30', colors.card as string]}
           style={styles.heroArea}>
           {/* corner glow */}
           <View style={[styles.glow, { backgroundColor: colors.primary }]} />
@@ -176,7 +174,7 @@ const styles = StyleSheet.create({
   primaryBtn: {
     borderRadius: 14, paddingVertical: 17,
     alignItems: 'center',
-    shadowColor: '#00E5FF', shadowOpacity: 0.3,
+    shadowColor: '#FF6B00', shadowOpacity: 0.3,
     shadowRadius: 10, elevation: 6,
   },
   primaryBtnText: { fontSize: 16, fontWeight: '800', color: '#fff', letterSpacing: 0.5 },
